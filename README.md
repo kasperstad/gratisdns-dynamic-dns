@@ -11,13 +11,13 @@ DynamicDNS Client written in [Go](https://golang.org/) for usage on [GratisDNS](
 Linux:
 
 ```
-./gratisdns-dynamic-dns -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
+./gdnsupdater -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
 ```
 
 Windows:
 
 ```
-gratisdns-dynamic-dns.exe -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
+gdnsupdater.exe -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
 ```
 
 ### Supported Platforms
