@@ -101,7 +101,7 @@ func main() {
 	}
 
 	_, err := os.Stat(configFile)
-	if err == nil {
+	if err != nil {
 		log.Fatal("Please initialize the config file first!")
 	}
 
