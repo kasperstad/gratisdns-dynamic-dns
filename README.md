@@ -6,19 +6,9 @@ DynamicDNS Client written in [Go](https://golang.org/) for usage on [GratisDNS](
 
 * Download the latest version from the [Releases](https://github.com/kasperstad/gratisdns-dynamic-dns/releases) tab
 * Unpack the downloaded version on the Computer/Server which should do the DynamicDNS Update
+  * When you have unpacked the executeable, run it with the "-i" switch.
+  * Fill out the information, this will create a **config.json** file with the info needed to run the Dynamic DNS update
 * Run the program by hand or schedule it using Task Scheduler or Crontab
-
-Linux:
-
-```
-./gdnsupdater -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
-```
-
-Windows:
-
-```
-gdnsupdater.exe -u "username" -p "YourUpdatePassword" -d "example.com" -h "ddns.example.com"
-```
 
 ### Supported Platforms
 

@@ -1,15 +1,25 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 const baseUpdateURL = "https://admin.gratisdns.com/ddns.php"
+
+type Config struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Domain   string `json:"domain"`
+	Hostname string `json:"hostname"`
+}
 
 func checkIfUpdateIsNeeded(hostname string) bool {
 
@@ -41,17 +51,75 @@ func checkIfUpdateIsNeeded(hostname string) bool {
 	return updateIsNeeded
 }
 
+func genConfigFile(configFile string) {
+
+	var (
+		username string
+		password string
+		domain   string
+		host     string
+	)
+
+	fmt.Print("Username: ")
+	fmt.Scanf("%s\n", &username)
+
+	fmt.Print("DynamicDNS Password: ")
+	fmt.Scanf("%s\n", &password)
+
+	fmt.Print("Domain: ")
+	fmt.Scanf("%s\n", &domain)
+
+	fmt.Print("Hostname: ")
+	fmt.Scanf("%s\n", &host)
+
+	m := Config{username, password, domain, host}
+	config, _ := json.Marshal(m)
+
+	_ = ioutil.WriteFile(configFile, config, 0644)
+}
+
+func getCurrentDir() string {
+
+	ex, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return filepath.Dir(ex)
+}
+
 func main() {
 
-	username := flag.String("u", "username", "GratisDNS Username")
-	password := flag.String("p", "password", "GratisDNS DynamicDNS Password")
-	domainName := flag.String("d", "example.com", "Domain where the hostname is located")
-	hostName := flag.String("h", "ddns.example.com", "Dynamic DNS hostname relativ")
+	initialize := flag.Bool("i", false, "Initialize config file")
 	flag.Parse()
 
-	if checkIfUpdateIsNeeded(*hostName) {
+	configFile := fmt.Sprintf("%s/config.json", getCurrentDir())
 
-		updateUriConstruct := fmt.Sprintf("%s?u=%s&p=%s&d=%s&h=%s", baseUpdateURL, *username, *password, *domainName, *hostName)
+	if *initialize {
+		genConfigFile(configFile)
+		os.Exit(0)
+	}
+
+	_, err := os.Stat(configFile)
+	if err == nil {
+		log.Fatal("Please initialize the config file first!")
+	}
+
+	var config Config
+
+	configFileRead, err := os.Open(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer configFileRead.Close()
+
+	configByteValue, _ := ioutil.ReadAll(configFileRead)
+	json.Unmarshal(configByteValue, &config)
+
+	if checkIfUpdateIsNeeded(*&config.Hostname) {
+
+		updateUriConstruct := fmt.Sprintf("%s?u=%s&p=%s&d=%s&h=%s", baseUpdateURL, *&config.Username, *&config.Password, *&config.Domain, *&config.Hostname)
 
 		resp, err := http.Get(updateUriConstruct)
 		if err != nil {
