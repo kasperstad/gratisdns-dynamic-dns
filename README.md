@@ -24,7 +24,7 @@ gratisdns-dynamic-dns.exe -u "username" -p "YourUpdatePassword" -d "example.com"
 
 | OS                     | Supported             |
 | ---------------------- | --------------------- |
-| Ubuntu 20.04 LTS       | YES                   |
+| Ubuntu 20.04 LTS       | Yes                   |
 | Windows 10             | Yes                   |
 | Windows Server 2016    | Yes                   |
 | Windows Server 2019    | Yes                   |
