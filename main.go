@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -90,19 +89,12 @@ func getCurrentDir() string {
 
 func main() {
 
-	initialize := flag.Bool("i", false, "Initialize config file")
-	flag.Parse()
-
 	configFile := fmt.Sprintf("%s/config.json", getCurrentDir())
-
-	if *initialize {
-		genConfigFile(configFile)
-		os.Exit(0)
-	}
 
 	_, err := os.Stat(configFile)
 	if err != nil {
-		log.Fatal("Please initialize the config file first!")
+		genConfigFile(configFile)
+		return
 	}
 
 	var config Config

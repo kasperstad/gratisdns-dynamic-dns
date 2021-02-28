@@ -1,4 +1,4 @@
-VERS=0.2.1
+VERS=0.3.0
 
 all: build
 
